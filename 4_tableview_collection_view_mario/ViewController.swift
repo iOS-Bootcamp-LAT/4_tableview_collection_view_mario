@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Character {
+struct Character: Codable {
     public var name: String
     public var description: String
     public var imageName: String
@@ -23,10 +23,20 @@ class ViewController: UIViewController {
     var charactersSectionTwo: [Character] = []
     var currentCharacter: Character?
     
+    let refreshControl = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
         loadDataSectionTwo()
+        
+        //title =  String.localizeString(localizedString: "title-view-controller")
+        
+        //title =  String.emailInvalid(localizedString: "invalid-email", forEmail: "test@test.com")
+        
+        title = "My ViewController"
+        
+        //NSLocalizedString("title-view-controller", comment: "")
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -34,6 +44,121 @@ class ViewController: UIViewController {
         
         let uiNib = UINib(nibName: "CharacterTwoTableViewCell", bundle: nil)
         tableView.register(uiNib, forCellReuseIdentifier: "MyCellTest")
+        
+        
+        // saveFakeData()
+        
+        // printData()
+        
+        // saveCharacter()
+        
+        //printMyCharacter()
+        
+        //saveCharacters()
+        
+        // printMyCharacters()
+        tableView.refreshControl = refreshControl
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(doSomething), for: .valueChanged)
+
+        
+    }
+    
+    @objc func doSomething(refreshControl: UIRefreshControl) {
+        print("Hello World!")
+        
+        // somewhere in your code you might need to call:
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.refreshControl.endRefreshing()
+        }
+        
+    }
+    
+    func saveCharacter() {
+        let c = Character(name: "Donkey Kong", description: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words", imageName: "Donkey Kong")
+        
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+
+            // Encode Note
+            let data = try encoder.encode(c)
+
+            // Write/Set Data
+            UserDefaults.standard.set(data, forKey: "MyCharacter")
+
+        } catch {
+            print("Unable to Encode Note (\(error))")
+        }
+    }
+    
+    
+    
+    func printMyCharacter() {
+        if let data = UserDefaults.standard.data(forKey: "MyCharacter") {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+
+                // Decode Note
+                let myCharacter = try decoder.decode(Character.self, from: data)
+                print("MyNumber: \(myCharacter)")
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
+        }
+        
+        
+    }
+    
+    func saveCharacters() {
+        let c = Character(name: "Donkey Kong", description: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words", imageName: "Donkey Kong")
+        
+        do {
+            // Create JSON Encoder
+            let encoder = JSONEncoder()
+
+            // Encode Note
+            let data = try encoder.encode([c])
+
+            // Write/Set Data
+            UserDefaults.standard.set(data, forKey: "MyCharacter")
+
+        } catch {
+            print("Unable to Encode Note (\(error))")
+        }
+    }
+    
+    
+    
+    func printMyCharacters() {
+        if let data = UserDefaults.standard.data(forKey: "MyCharacter") {
+            do {
+                // Create JSON Decoder
+                let decoder = JSONDecoder()
+
+                // Decode Note
+                let myCharacters = try decoder.decode([Character].self, from: data)
+                print("myCharacters: \(myCharacters.count) , \(myCharacters.first)")
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
+        }
+        
+        
+    }
+    
+    func saveFakeData() {
+        let defaults = UserDefaults.standard
+        defaults.set(939, forKey: "MyNumber")
+    }
+    
+    func printData() {
+        let defaults = UserDefaults.standard
+        let myNumber = defaults.integer(forKey: "MyNumber")
+        
+        print("MyNumber: \(myNumber)")
     }
 
     func loadData() {

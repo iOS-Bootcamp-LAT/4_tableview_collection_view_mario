@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  4_tableview_collection_view_mario
+
+  Created by David Granado Jordan on 7/21/22.
+  
+*/
+
+
+"title-view-controller" = "Mi lista de personajes";
+
+"invalid-email" = "El correo %@  es invalido";
